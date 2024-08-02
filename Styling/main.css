@@ -29,7 +29,7 @@ body {
   left: -150%; /* Adjust based on the width to center the pattern */
   width: 400%; /* Quadruple the width to cover rotation */
   height: 400%; /* Quadruple the height to cover rotation */
-  background-image: url('all Three.png');
+  background-image: url('all_Three.png');
   background-size: 4.5em 1.5em;
   background-repeat: repeat;
   transform: rotate(315deg);

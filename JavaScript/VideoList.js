@@ -94,8 +94,7 @@ function getvideoIDFromUrl(url) {
  */
 function fetchVideoInfo(videoID, url) {
   //console.log("Getting video info");
-  const apiKey = 'AIzaSyCwSHvZBToshLMY5NoHqq_knHIEfzWrM4c';  // Youtube Data API Key
-  const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoID}&key=${apiKey}`;
+  const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoID}&key=AIzaSyCwSHvZBToshLMY5NoHqq_knHIEfzWrM4c`;
   fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
