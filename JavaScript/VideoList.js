@@ -6,7 +6,7 @@
 
 console.log("Video Lister loaded");
 let videoList = [];
-const channelName = "mrfuzzypants11";
+const channelName = "atrioc";
 const blockOrText = false; // True for block colouring, false for text colouring.
 
 /**
