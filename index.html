@@ -1,0 +1,31 @@
+<html>
+  <script>console.log("Loading Site");</script>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Get Smarter Saturday</title>
+    <link rel="stylesheet" href="Styling/main.css">
+  </head>
+  <body>
+    <div class="backing">
+      <div class="self-credit">
+        <p>Tool by<br>MrFuzzyPants!</p>
+      </div>
+      <div class="title-backing">
+        <h1 class="main-header">Get Smarter Saturday!</h1>
+        <div class="button-orientator">
+          <button id="submissionSort" class="sort-button">Most Submitted</button>
+          <button id="durationSort" class="sort-button">Shortest</button>
+          <button id="refreshSort" class="sort-button"><img src="Styling/Untap.png" alt="Refresh"></button>
+        </div>
+      </div>
+      <hr class="divider"></hr>
+      <div id="video-list"></div>
+      <script>console.log("Loading Scripts");</script>
+      <script src="JavaScript/tmi.min.js">//TMI.js script</script>
+      <script>console.log("Twitch client loaded");</script>
+      <script src="JavaScript/VideoList.js"></script>
+    </div>
+  </body>
+</html>
