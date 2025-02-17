@@ -1,0 +1,158 @@
+/*
+* Author: MrFuzzyPants11
+* Created: July 28 2024
+* Last Modified: August 1st 2024
+* Description: Main CSS for styling website
+*/
+
+:root{
+  --purple-dark:#7624e8;
+  --purple-light:#9246FF;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 3em;
+  background-color:var(--purple-light);
+}
+.backing{
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: visible;
+ }
+.backing::before{
+  content: "";
+  position: fixed;
+  top: -150%; /* Adjust based on the height to center the pattern */
+  left: -150%; /* Adjust based on the width to center the pattern */
+  width: 400%; /* Quadruple the width to cover rotation */
+  height: 400%; /* Quadruple the height to cover rotation */
+  background-image: url('All_Three.png');
+  background-size: 4.5em 1.5em;
+  background-repeat: repeat;
+  transform: rotate(315deg);
+  transform-origin: center;
+  z-index: -1;
+}
+.self-credit{
+  position:absolute;
+  top: 0;
+  left: 0;
+  background-color:var(--purple-light);
+  border-radius:1em;
+  border:0.2em solid var(--purple-dark); 
+  margin-left: 0.5em;
+  margin-top:-2.5em;
+  padding-left:0.3em;
+  padding-right:0.3em;
+}
+.title-backing{
+  display:flex;
+  flex-direction:column;
+  background-color:var(--purple-light);
+  border-radius:1em;
+  border:0.2em solid var(--purple-dark); 
+  align-items: center;
+  width:30%;
+  margin-left: 35%;
+  margin-right: 35%;
+}
+.main-header{
+  font-family:impact, san-serif;
+  font-size: 3em;
+  letter-spacing:0.05em;
+}
+.tagline{
+  font-size: 1.2em;
+  margin-bottom: 1.5em;
+}
+.button-orientator{
+  display:flex;
+  flex-direction:row;
+  gap:0.5em;
+  width:80%;
+}
+.sort-button{
+  font-family:impact, san-serif;
+  font-size: 1.5em;
+  padding-top:0.5em;
+  padding-bottom:0.5em;
+  background-color: var(--purple-dark);
+  border-radius: 0.5em;
+  align-items: center;
+  width: 100%;
+  border: 0.2em solid #984eff; 
+}
+.sort-button:hover{
+  transform: scale(1.1);
+}
+.input-box {
+  background-color: var(--purple-dark);
+  border-radius:0.5vw;
+  font-size:1em;
+  border: 0.2em solid #984eff; 
+}
+button img {
+  width: 1.5em;
+  height: auto; 
+  border: none;
+}
+.divider{
+  margin-left:10%;
+  margin-right:10%;
+  color:black;
+  border-radius:30%;
+  border: solid;
+}
+#video-list {
+  margin-top: 1.5em;
+  margin-left: 10%;
+  margin-right: 10%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5em;
+}
+.video-item {
+  display: flex;
+  background-color: #edecec;
+  border-radius: 0.5em;
+  align-items: center;
+  width: 100%;
+  border-bottom: 0.3em solid #9a9a9a;
+}
+.video-item:hover {
+  transform: scale(1.1);
+}
+.video-thumbnail {
+  display:block;
+  max-width:200px;
+  height: auto;
+  margin-left:2%;
+  margin-right:3%;
+  clip-path: inset(13% 0 13% 0);
+}
+.video-details {
+  flex-grow: 1;
+  text-align: left;
+}
+.video-channel{
+  font-size:1.1em;
+  padding-bottom:0em;
+}
+.video-submitted{
+  font-size:0.9em;
+}
+.video-duration-field {
+  text-align: left;
+  margin-right: 15%;
+  white-space: nowrap;
+}
+.video-duration{
+  font-size:1.3em;
+  padding-bottom:0em;
+}
+.video-views{
+  font-size:0.9em;
+}

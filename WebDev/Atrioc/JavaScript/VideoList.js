@@ -1,13 +1,14 @@
 /*
 * Author: MrFuzzyPants11
+* Created: July 28 2024
 * Last Modified: August 2nd 2024
 * Description: Main JS for making an modifying video list on website
 */
 
 console.log("Video Lister loaded");
 let videoList = [];
-const channelName = "atrioc";
 const blockOrText = false; // True for block colouring, false for text colouring.
+
 
 /**
  * Event listeners for sorting buttons
@@ -28,9 +29,21 @@ document.getElementById('refreshSort').addEventListener('click', function() {
   displayVideoList();
 });
 
-setupClient();
+/**
+ * Function to change channel name
+ */
+function saveInput() {
+  const channelName = document.getElementById("channelName").value;
 
-function setupClient() { // Setup TMI to listen to Twitch Chat
+  console.log("Updated channel name to: " + channelName)
+  
+  document.getElementById("channelName").placeholder = "Refresh to reset";
+  document.getElementById("channelName").value = "";
+
+  setupClient(channelName);
+}
+
+function setupClient(channelName) { // Setup TMI to listen to Twitch Chat
   const client = new tmi.Client({
     channels: [channelName],
   });
