@@ -10,7 +10,6 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Prevent scrollbars */
 }
 
 .main-content {
@@ -63,27 +62,41 @@ body {
   border-radius: 1vw;
   box-shadow: 0.5vw 1vw var(--shadow);
   cursor:pointer;
-  margin-bottom:5vh;
+  margin-bottom:0.5em;
 }
 
 .rectangle-expanded {
-  height: 40vh; /* New height when the div is active (clicked) */
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  height: fit-content;
+  overflow: hidden;
+  z-index:2;
+  width: 80vw;
+  background-color: var(--main-yellow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  text-align: center;
+  border-radius: 1vw;
+  box-shadow: 0.5vw 1vw var(--shadow);
+  cursor:pointer;
+  margin-bottom:0.5em;
 }
 
 .content {
   flex: 0 0 56.5%; /* Take up 75% of the space */
   padding-left: 0.5%; /* Space between text and image */
-  padding-right:3%;
+  padding-right: 3%;
   text-align: justify;
 }
 
 .image {
   flex: 0 0 38.5%; /* Take up 25% of the space */
   padding-left: 1%;
-  padding-right:0.5%;
-  object-fit: contain; /* Make sure image fits within its space */
-  max-width: 38.5%;
-  max-height: 100%
+  padding-right: 0.5%;
+  object-fit: contain;
+  max-width: 37%;
 }
 
 .centered-text {

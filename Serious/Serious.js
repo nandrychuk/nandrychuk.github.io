@@ -1,0 +1,44 @@
+window.backgroundGenerator(true);
+// Select all elements with the class 'expandable'
+const expandableDivs = document.querySelectorAll(".rectangle");
+
+// Loop through each element and attach the click event listener
+expandableDivs.forEach(function(div) {
+  div.addEventListener("click", function() {
+    this.classList.toggle("rectangle-expanded"); // Toggle the "expanded" class on click
+
+    // Check if the div has been expanded
+    if (this.classList.contains("rectangle-expanded")) {
+      // Modify the content inside the div when expanded
+      let content = "";
+      if (this.id === "DGE") {
+        content = `
+          <img src="Styling/Dal Games Expo Logo.png" alt="Dal Games Logo" class="image" />
+          <div class="content"><p class="ubuntu-regular">The Dal Games Expo is an annual student run event with 600+ attendees last year. I am the main founder and website manager, I built this website in carrd.co to easily make many webpages and utilize their server hosting.</p>
+          <a class="centered-text" href="https://www.dalgamesexpo.ca" target="_blank" rel="noopener noreferrer">Take a Look</a></div>`;
+      } else if (this.id === "GSS") {
+        content = `
+          <img src="Styling/Clown.png" alt="Clown" class="image" />
+          <div class="content"><p class="ubuntu-regular">I made this tool for a streamer, Atrioc, to make it easier to track videos suggested by viewers for his weekly series, Get Smarter Saturday. Made entirely in Javascript, HTML, and CSS.</p>
+          <a class="centered-text" href="Atrioc/GSSTool.html" target="_blank" rel="noopener noreferrer">Take a Look</a></div>`;
+      } else if (this.id === "TP") {
+        content = `
+          <img src="../Styling/test_squiggle.svg" alt="squiggle" class="image" />
+          <div class="content"><p class="ubuntu-regular">This Portfolio was entirely written in JavaScript, CSS, and HTML without the use of external tools or libraries. Purple and yellow may not be for everyone but as you can see from my utilization in this and other projects, I love them.</p>`;
+      }
+      this.innerHTML = content; // Add the new content
+
+      // this.style.maxHeight = `${this.scrollHeight}px`; // Expand to fit content
+
+    } else {
+      // Reset the content when collapsed
+      if (this.id === "DGE") {
+        this.innerHTML = `<p class="ubuntu-medium">Dal Games Expo</p>`;
+      } else if (this.id === "GSS") {
+        this.innerHTML = `<p class="ubuntu-medium">Get Smarter Saturday</p>`;
+      } else if (this.id === "TP") {
+        this.innerHTML = `<p class="ubuntu-medium">This Portfolio</p>`;
+      }
+    }
+  });
+});
