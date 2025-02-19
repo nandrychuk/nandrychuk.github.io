@@ -99,6 +99,21 @@ body {
   max-width: 37%;
 }
 
+#clown {
+  max-height: 8em;
+}
+
+.linkAndGit {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.gitLogo {
+  max-height:2em;
+}
+
 .centered-text {
   text-align: center;
 }
