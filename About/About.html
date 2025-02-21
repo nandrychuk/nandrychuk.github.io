@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -7,6 +8,7 @@
     <meta name="author" content="Nick Andrychuk">
     <title>Portfolio</title>
     <link rel="stylesheet" href="../Styling/Main.css">
+    <link rel="stylesheet" href="Styling/About.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
@@ -16,14 +18,32 @@
       <header class="header">
         <h1 class="ubuntu-bold">About Me</h1>
       </header>
-  
-      <div class="rectangle-expanded">
-        <img src="Styling/image" alt="image" class="image" />
-        <p class="content"> TEXT<br>TEXT<br>TEXT<br>TEXT<br>TEXT<br>TEXT<br>TEXT<br>TEXT</p>
-      </div> 
+
+      <div class="about-container">
+        <img src="Styling/headshot.png" alt="headshot" class="about-image" />
+        <div class="about-content">
+          <p class="ubuntu-regular">I am one of those people who always wants to know how something works and how to tweak it. Throughout my life that has reflected itself in my two major hobbies: board/trading card gaming, and computer science.</p>
+          <ul>
+            <li>
+              <p class="ubuntu-regular">I spent a majority of my formative years playing as many board games as I could, and video games when no one wanted to play board games. 
+                That has led to many exciting opportunities for me, like being the president of multiple Dalhousie societies, and founding my own <a href="https://dalgamesexpo.ca/" target="_blank" rel="noopener noreferrer">gaming convention.</a> 
+                I am extremely proud of the latter and will mention it often if I get the chance.</p>
+            </li>
+            <li>
+              <p class="ubuntu-regular">Of course my interest in computers has led me to pursue it both academically and as a career. However, I didn't always know what part of CS I enjoyed.
+                In high school I only slightly cared enough to take my grade 11 CS course and ended up loving it. By the time grade 12 came around I had done so much self study that our new CS 
+                teacher (who had never taught CS before, and it was not her field) spent most of our classes discussing what should be taught and what resources to use with me. Sadly that term 
+                was cut short by COVID-19 but I was able to pick it up in the fall once I started at Dal. There I bounced around interests from security, to web design, until finally falling in love
+                with communications. Data transfer, networking, protocols, information privacy, and such. I still like all the other things, and spend most of my time working with them but the basics of
+                connecting people. That's what I love about technology.</p>
+            </li>
+          </ul>
+          <p class="ubuntu-regular"><b>Education:</b> Bachelors of Computer Science, Dalhousie University 2024</p>
+        </div>
+      </div>      
     </div>
 
     <script src="../Main.js"></script>
-    <script> window.backgroundGenerator(true);</script>
+    <script>window.backgroundGenerator(true)</script>
   </body>
 </html>

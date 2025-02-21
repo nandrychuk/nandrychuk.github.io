@@ -17,19 +17,19 @@ expandableDivs.forEach(function(div) {
           <div class="content"><p class="ubuntu-regular">The Dal Games Expo is an annual student run event with 600+ attendees last year. I am the main founder and website manager, I built this website in carrd.co to easily make many webpages and utilize their server hosting.</p>
           <div class="linkAndGit"><a href="https://www.dalgamesexpo.ca" target="_blank" rel="noopener noreferrer">Take a Look</a></div></div>`;
       } else if (this.id === "GSS") {
-        content = `
-          <img id="clown" src="Styling/Clown.png" alt="Clown" class="image" />
-          <div class="content"><p class="ubuntu-regular">I made this tool for a streamer, Atrioc, to make it easier to track videos suggested by viewers for his weekly series, Get Smarter Saturday. Made entirely in Javascript, HTML, and CSS. This version has been updated to accept any twitch channel.</p>
+        content  = `
+          <img src="Styling/Clown.png" alt="Clown" class="image" />
+          <div class="content"><p class="ubuntu-regular">I made this tool for a streamer, Atrioc, to make it easier to track videos suggested by viewers for his weekly series, Get Smarter Saturday. Made entirely in Javascript, HTML, and CSS. To understand the background you kind of need to be a fan of Atrioc already.</p>
           <div class="linkAndGit"><a href="Atrioc/GSSTool.html" target="_blank" rel="noopener noreferrer">Take a Look</a>
-          <a href="https://github.com/MrFuzzyPants11/AtriocGetSmarter" target="_blank" rel="noopener noreferrer"><img class=gitLogo src="../Styling/github-mark.svg"></a></div></div>`;
+          <a href="https://github.com/MrFuzzyPants11/AtriocGetSmarter" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
       } else if (this.id === "TP") {
         content = `
-          <img src="../Styling/test_squiggle.svg" alt="squiggle" class="image" />
-          <div class="content"><p class="ubuntu-regular">This Portfolio was entirely written in JavaScript, CSS, and HTML without the use of external tools or libraries. Purple and yellow may not be for everyone but as you can see from my utilization in this and other projects, I love them.</p>`;
+          <img src="../Styling/MagentaBean.svg" alt="Abstract image" class="image" />
+          <div class="content"><p class="ubuntu-regular">This Portfolio was entirely written in JavaScript, CSS, and HTML without the use of external tools or libraries. Purple and yellow may not be for everyone but as you can see from my utilization in this and other projects, I love them.</p>
+          <div class="linkAndGit"><a href="https://mrfuzzypants11.github.io/" target="_blank" rel="noopener noreferrer">Take a Look</a>
+          <a href="https://github.com/MrFuzzyPants11/mrfuzzypants11.github.io" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div>`;
       }
-      this.innerHTML = content; // Add the new content
-
-      // this.style.maxHeight = `${this.scrollHeight}px`; // Expand to fit content
+      this.innerHTML = content;
 
     } else {
       // Reset the content when collapsed

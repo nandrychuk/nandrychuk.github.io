@@ -1,0 +1,37 @@
+:root {
+  --main-purple:#7002b9;
+  --main-yellow:#F7D700;
+  --shadow:#5e085f;
+}
+
+.ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-container {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  z-index:2;
+  width: 80vw;
+  height: fit-content;
+  background-color: var(--main-yellow);
+  font-size: 1.5vw;
+  text-align: justify;
+  border-radius: 1vw;
+  box-shadow: 0.5vw 1vw var(--shadow);
+  margin-bottom:0.5em;
+}
+
+.about-image {
+  width: 30%;
+  margin: 2%;
+  border-radius: 1vw;
+}
+
+.about-content {
+  flex: 1;
+  margin-right:3%;
+}
