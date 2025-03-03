@@ -21,13 +21,13 @@ expandableDivs.forEach(function(div) {
           <img src="Styling/Clown.png" alt="Clown" class="image" />
           <div class="content"><p class="ubuntu-regular">I made this tool for a streamer, Atrioc, to make it easier to track videos suggested by viewers for his weekly series, Get Smarter Saturday. Made entirely in Javascript, HTML, and CSS. To understand the background you kind of need to be a fan of Atrioc already.</p>
           <div class="linkAndGit"><a href="Atrioc/GSSTool.html" target="_blank" rel="noopener noreferrer">Take a Look</a>
-          <a href="https://github.com/MrFuzzyPants11/AtriocGetSmarter" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
+          <a href="https://github.com/nandrychuk/AtriocGetSmarter" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
       } else if (this.id === "TP") {
         content = `
           <img src="../Styling/MagentaBean.svg" alt="Abstract image" class="image" />
           <div class="content"><p class="ubuntu-regular">This Portfolio was entirely written in JavaScript, CSS, and HTML without the use of external tools or libraries. Purple and yellow may not be for everyone but as you can see from my utilization in this and other projects, I love them.</p>
-          <div class="linkAndGit"><a href="https://mrfuzzypants11.github.io/" target="_blank" rel="noopener noreferrer">Take a Look</a>
-          <a href="https://github.com/MrFuzzyPants11/mrfuzzypants11.github.io" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div>`;
+          <div class="linkAndGit"><a href="https://nandrychuk.github.io/" target="_blank" rel="noopener noreferrer">Take a Look</a>
+          <a href="https://github.com/nandrychuk/nandrychuk.github.io" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div>`;
       }
       this.innerHTML = content;
 

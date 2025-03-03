@@ -15,7 +15,7 @@ expandableDivs.forEach(function(div) {
         content = `
           <img src="Styling/PenguinRacing.png" alt="Penguin Racing Logo" class="image" />
           <div class="content"><p class="ubuntu-regular">Penguin Racing is a game I made as a sort of Game Jam challenge to make a game in under a week while learning/using Love2D, a 2D game making framework for Lua. It was fun, I learned a lot, and is a learning tactic I will use more often.</p>
-          <div class="linkAndGit"><a href="https://github.com/MrFuzzyPants11/PenguinRacing" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
+          <div class="linkAndGit"><a href="https://github.com/nandrychuk/PenguinRacing" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
       } else if (this.id === "CI") {
         content = `
         <img src="Styling/csv.png" alt="Custom CSV icon" class="image" />
