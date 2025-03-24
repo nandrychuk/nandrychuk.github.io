@@ -11,24 +11,24 @@
 }
 
 .about-container {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  z-index:2;
   width: 80vw;
-  height: fit-content;
   background-color: var(--main-yellow);
   font-size: 1.5vw;
   text-align: justify;
   border-radius: 1vw;
   box-shadow: 0.5vw 1vw var(--shadow);
-  margin-bottom:0.5em;
+  margin-bottom: 0.5em;
+  padding: 1em;
+  overflow: hidden;
+  z-index:2;
 }
 
 .about-image {
+  float: left;
+  margin-right: 1em;
   width: 30%;
-  margin: 2%;
-  border-radius: 1vw;
+  height: auto;
+  border-radius:0.25vw;
 }
 
 .about-content {

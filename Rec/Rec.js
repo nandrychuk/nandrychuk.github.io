@@ -14,12 +14,12 @@ expandableDivs.forEach(function(div) {
       if (this.id === "PR") {
         content = `
           <img src="Styling/PenguinRacing.png" alt="Penguin Racing Logo" class="image" />
-          <div class="content"><p class="ubuntu-regular">Penguin Racing is a game I made as a sort of Game Jam challenge to make a game in under a week while learning/using Love2D, a 2D game making framework for Lua. It was fun, I learned a lot, and is a learning tactic I will use more often.</p>
+          <div class="content"><p class="ubuntu-regular">Penguin Racing is a game I made as a sort of Game Jam challenge to make a game in under a week while learning/using Love2D. This was a fun activity, I learned a lot, and is a learning tactic I will definitely use more often.</p>
           <div class="linkAndGit"><a href="https://github.com/nandrychuk/PenguinRacing" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
       } else if (this.id === "CI") {
         content = `
         <img src="Styling/csv.png" alt="Custom CSV icon" class="image" />
-        <div class="content"><p class="ubuntu-regular">These are some custom icons I have slowly added onto just to make my list a little prettier using files that either the icons didn't load properly, I don't like, or that were very generic. CSV is rainbow because of my colour coded VSC extension for CSVs</p>
+        <div class="content"><p class="ubuntu-regular">These are some custom icons I have slowly added onto just to make my file explorer a little prettier using files that either the icons didn't load properly, I don't like, or that were very generic. CSV is rainbow because of my colour coded VSC extension for CSVs</p>
         <div class="linkAndGit"><a href="https://github.com/nandrychuk/CustomIcons" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
       } else if (this.id === "MD") {
         content = `
