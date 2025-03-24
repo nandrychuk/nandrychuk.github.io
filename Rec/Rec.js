@@ -25,7 +25,7 @@ expandableDivs.forEach(function(div) {
         content = `
         <img src="Styling/MinecraftGrassBlock.png" alt="Minecraft Grass Block" class="image" />
         <div class="content"><p class="ubuntu-regular">Minecraft is a game I have probably spent over 10k hours in. Most of the tools I needed to enhance my experience like mods and datapacks have been made by other people, however I have made a few myself when I couldn't find them, this here is my favourite, because it simply saves me time.</p>
-        <div class="linkAndGit"><a href="https://www.planetminecraft.com/data-pack/tnt-beacon/" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="Styling/PlanetMinecraftLogo.svg"></a></div></div>`;
+        <div class="linkAndGit"><a href="https://www.planetminecraft.com/data-pack/tnt-beacon/" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="Styling/planetMinecraftLogo.svg"></a></div></div>`;
       }
       this.innerHTML = content;
 
