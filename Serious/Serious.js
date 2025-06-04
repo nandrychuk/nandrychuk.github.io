@@ -14,8 +14,9 @@ expandableDivs.forEach(function(div) {
       if (this.id === "DGE") {
         content = `
           <img src="Styling/Dal Games Expo Logo.png" alt="Dal Games Logo" class="image" />
-          <div class="content"><p class="ubuntu-regular">The Dal Games Expo is an annual student run event with 600+ attendees last year. I am the main founder and website manager, I built this website in carrd.co to easily make many webpages and utilize their server hosting.</p>
-          <div class="linkAndGit"><a href="https://www.dalgamesexpo.ca" target="_blank" rel="noopener noreferrer">Take a Look</a></div></div>`;
+          <div class="content"><p class="ubuntu-regular">The Dal Games Expo is an annual student run event with 600+ attendees last year. I am the main founder and website manager. This updated version was kickstarted by Simon, a fellow organizer, and finalized/updated by myself.</p>
+          <div class="linkAndGit"><a href="https://www.dalgamesexpo.ca" target="_blank" rel="noopener noreferrer">Take a Look</a>
+          <a href="https://github.com/Simon-Losier/dal-games-expo-site" target="_blank" rel="noopener noreferrer"><img class="smallLogo" src="../Styling/github-mark.svg"></a></div></div>`;
       } else if (this.id === "GSS") {
         content  = `
           <img src="Styling/Clown.png" alt="Clown" class="image" />
