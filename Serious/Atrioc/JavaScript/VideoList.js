@@ -106,7 +106,7 @@ function getvideoIDFromUrl(url) {
  * @param url simply passed through this function for function call simplification
  */
 function fetchVideoInfo(videoID, url) {
-  const apiUrl = `https://my-proxy.onrender.com/api/youtube?part=snippet,contentDetails,statistics&id=${videoID}`;
+  const apiUrl = `https://github-pages-ng7i.onrender.com/api/youtube?part=snippet,contentDetails,statistics&id=${videoID}`;
   fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
