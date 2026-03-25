@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Address Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="Styling/PCServiceability.css"/>
+</head>
+<body>
+
+<header>
+  <img src="https://www.purplecowinternet.com/static/cow-a95f831a8c15992ce2eb4775ca5303d9.png" alt="Purple Cow Logo" width="5%" height="auto" class="logo"/>
+  <h1><span> Serviceability Toolbox</span></h1>
+</header>
+
+<div class="layout">
+  <div class="sidebar">
+
+    <!-- Search -->
+    <div class="sidebar-section">
+      <div class="section-label">Search Address</div>
+      <div class="input-row">
+        <input id="address-input" type="text" placeholder="Type an address…" autocomplete="off"/>
+        <button id="go-btn" onclick="navigateToAddress()">Go</button>
+      </div>
+    </div>
+
+    <!-- Address display -->
+    <div class="sidebar-section" id="address-display">
+      <div class="section-label">Selected Address</div>
+      <div class="addr-street"   id="addr-line1"></div>
+      <div class="addr-sub"     id="addr-line2"></div>
+      <div class="addr-sub" id="addr-line3"></div>
+      <div class="addr-sub"   id="addr-line4"></div>
+      <button id="copy-btn" onclick="copyAddress()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy Address
+      </button>
+    </div>
+
+    <!-- Checks -->
+    <div class="sidebar-section" id="checks-section">
+      <div class="section-label">Serviceability</div>
+
+      <div class="info-row">
+        <span class="info-label">Provincial Check</span>
+        <div class="info-right"><span id="chk-province" class="badge">—</span></div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">City Check</span>
+        <div class="info-right"><span id="chk-city" class="badge">—</span></div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Weird Buildings</span>
+        <div class="info-right">
+          <span id="chk-weird" class="badge">—</span>
+          <span id="chk-weird-reason" class="check-reason"></span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Purple Cow Website</span>
+        <div class="info-right">
+          <a id="pc-link" class="info-link" href="https://purplecowinternet.com/join-the-herd/" target="_blank">Check Manually ↗</a>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Salesforce</span>
+        <div class="info-right">
+          <a id="sf-link" class="info-link" href="https://purplecowinternet.lightning.force.com/lightning/page/home" target="_blank">Check Manually ↗</a>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Eastlink Website</span>
+        <div class="info-right">
+          <a id="el-link" class="info-link" href="https://www.eastlink.ca/bundles/?internet=true" target="_blank">Check Manually ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send to Jenny section (Only if approved) -->
+    <!-- <div class="sidebar-section" id="slack-section">
+      <div class="section-label">Address Wrong on Website?</div>
+      <div class="info-row">
+        <span class="info-label">Send to Jenny</span>
+        <div class="info-right">
+          <a id="slack-link" class="info-link" href="https://app.slack.com/client/TNZ1Q1GKS/D0ANRFCD1A9" target="_blank" onclick="copySlackMessage('UN')">Send UNserviceable ↗</a>
+          <p> | </p>
+          <a id="slack-link" class="info-link" href="https://app.slack.com/client/TNZ1Q1GKS/D0ANRFCD1A9" target="_blank" onclick="copySlackMessage('')">Send Serviceable ↗</a>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+</div>
+
+<script src="PCServiceability.js"></script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVvlMq6pztGLkpLIq6AgpMfoNvgTZzYG8&libraries=places&callback=initMap"
+  async defer>
+</script>
+</body>
+</html>
