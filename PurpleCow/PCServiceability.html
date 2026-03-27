@@ -7,11 +7,12 @@
   <title>PC Serviceability Tool</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="Styling/PCServiceability.css"/>
+  <link rel="icon" type="image/x-icon" href="Styling/favicon.png">
 </head>
 <body>
 
 <header>
-  <img src="https://www.purplecowinternet.com/static/cow-a95f831a8c15992ce2eb4775ca5303d9.png" alt="Purple Cow Logo" width="5%" height="auto" class="logo"/>
+  <img src="Styling/PC Logo.png" alt="Purple Cow Logo" width="5%" height="auto" class="logo"/>
   <h1><span> Serviceability Toolbox</span></h1>
 </header>
 
@@ -44,65 +45,142 @@
 
     <!-- Checks -->
     <div class="sidebar-section" id="checks-section">
-      <div class="section-label">Serviceability</div>
+      <div class="section-label">Serviceability Checks</div>
 
       <div class="info-row">
-        <span class="info-label">Provincial Check</span>
+        <span class="info-label">
+          Provincial Check 
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Verifies that the address is in NS, NL, or PEI.<br><span  style="color: green">Serviceable</span> | Province does not make the address "Not Serviceable".<br><span  style="color: yellow">Unknown Serviceable</span> | address is not serviceable.</span>
+          </span>
+        </span>
         <div class="info-right"><span id="chk-province" class="badge">—</span></div>
       </div>
 
       <div class="info-row">
-        <span class="info-label">City Check</span>
+        <span class="info-label">
+          Service Area Check 
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Checks if the address is in a "high serviceability likelyhood" area.<br><span  style="color: green">Serviceable</span> | Area does not make the address "Not Serviceable".<br><span  style="color: yellow">Unknown Serviceable</span> | Not within an area but could still be serviceable.</span>
+          </span>
+        </span>
+        <div class="info-right"><span id="chk-circle" class="badge">—</span></div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">
+          City Check 
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Checks if the address is in a known serviceable city/town.<br><span  style="color: green">Serviceable</span> | City does not make the address "Not Serviceable".<br><span  style="color: yellow">Unknown Serviceable</span> | Not within a city/town explicitly marked as serivceable or not serviceable.<br><span  style="color: red">Not Serviceable</span> | address is in a known not serviceable city/town.</span>
+          </span>
+        </span>
         <div class="info-right"><span id="chk-city" class="badge">—</span></div>
       </div>
 
       <div class="info-row">
-        <span class="info-label">Weird Buildings</span>
+        <span class="info-label">
+          Weird Building Check 
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Checks if the address is a known "weird building".<br><span  style="color: green">Serviceable</span> | weird building list does not include the address.<br><span  style="color: red">Not Serviceable</span> | address is in the list and not serviceable.</span>
+          </span>
+        </span>
         <div class="info-right">
-          <span id="chk-weird" class="badge">—</span>
           <span id="chk-weird-reason" class="check-reason"></span>
+          <span id="chk-weird" class="badge">—</span>
         </div>
       </div>
 
       <div class="info-row">
-        <span class="info-label">Purple Cow Website</span>
+        <span class="info-label">Purple Cow Website
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Opens Purple Cow Website to check serviceability manually.<br><br>Automatically copies full address to clipboard.</span>
+          </span>
+        </span>
         <div class="info-right">
-          <a id="pc-link" class="info-link" href="https://purplecowinternet.com/join-the-herd/" target="_blank">Check Manually ↗</a>
+          <a id="pc-link" class="info-link" href="https://purplecowinternet.com/join-the-herd/" target="_blank" onclick="copyAddress()">Check Manually ↗</a>
         </div>
       </div>
 
       <div class="info-row">
-        <span class="info-label">Salesforce</span>
+        <span class="info-label">Salesforce
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Opens Salesforce to check serviceability manually.<br><br>Automatically copies street name to clipboard.</span>
+          </span>
+        </span>
         <div class="info-right">
-          <a id="sf-link" class="info-link" href="https://purplecowinternet.lightning.force.com/lightning/page/home" target="_blank">Check Manually ↗</a>
+          <a id="sf-link" class="info-link" href="https://purplecowinternet.lightning.force.com/lightning/page/home" target="_blank" onclick="copyStreetName()">Check Manually ↗</a>
         </div>
       </div>
 
       <div class="info-row">
-        <span class="info-label">Eastlink Website</span>
+        <span class="info-label">Eastlink Website
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Opens Eastlink Website to check serviceability manually.<br><br>Automatically copies full address to clipboard.</span>
+          </span>
+        </span>
         <div class="info-right">
-          <a id="el-link" class="info-link" href="https://www.eastlink.ca/bundles/?internet=true" target="_blank">Check Manually ↗</a>
+          <a id="el-link" class="info-link" href="https://www.eastlink.ca/bundles/?internet=true" target="_blank" onclick="copyAddress()">Check Manually ↗</a>
         </div>
       </div>
     </div>
 
-    <!-- Send to Jenny section (Only if approved) -->
-    <!-- <div class="sidebar-section" id="slack-section">
+    <div class="sidebar-section" id="sheets-section">
       <div class="section-label">Address Wrong on Website?</div>
       <div class="info-row">
-        <span class="info-label">Send to Jenny</span>
-        <div class="info-right">
-          <a id="slack-link" class="info-link" href="https://app.slack.com/client/TNZ1Q1GKS/D0ANRFCD1A9" target="_blank" onclick="copySlackMessage('UN')">Send UNserviceable ↗</a>
-          <p> | </p>
-          <a id="slack-link" class="info-link" href="https://app.slack.com/client/TNZ1Q1GKS/D0ANRFCD1A9" target="_blank" onclick="copySlackMessage('')">Send Serviceable ↗</a>
-        </div>
+        <span class="info-label">Update Address List
+          <span class="tooltip">ⓘ
+            <span class="tooltip-text">Adds an entry to list of addresses reporting this address as needing a change from the website.<br><span  style="color: green">Add</span> | Address does not appear on the website and should.<br><span  style="color: red">Remove</span> | Address appears on the website and should not.<br><br><span  style="color: #9b6dff">Reason</span> | The reason this address needs to be added or removed.</span>
+          </span>
+        </span>
+        <button id="copy-btn" onclick="openReportModal()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="12" x2="12" y2="18"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          Report Issue ↗
+        </button>
       </div>
-    </div> -->
+    </div>
   </div>
 
 
   <div class="map-container">
     <div id="map"></div>
+  </div>
+</div>
+
+
+<!-- Report Modal -->
+<div id="modal-overlay" class="modal-container">
+  <div class="modal-popup">
+    <div class="modal-title">Report Address</div>
+    <div class="modal-subtitle" id="modal-address-label"></div>
+    <div id="modal-warning"></div>
+
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <label class="modal-action">Action</label>
+      <select id="modal-action" class="modal-action-field">
+        <option value="Add">Add</option>
+        <option value="Remove">Remove</option>
+      </select>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <label class="modal-action">Reason</label>
+      <input id="modal-reason" type="text" placeholder="e.g. New subdivision, building demolished…" class="modal-action-field modal-action-field-reason"/>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:4px;">
+      <button onclick="closeReportModal()" class="modal-cancel-btn">
+        Cancel
+      </button>
+      <button id="modal-submit-btn" onclick="submitReport()" class="modal-submit-btn">
+        <span id="submit-spinner" class="spinner-inline" style="display:none;"></span>
+        <span id="submit-text">Submit</span>
+      </button>
+    </div>
   </div>
 </div>
 
