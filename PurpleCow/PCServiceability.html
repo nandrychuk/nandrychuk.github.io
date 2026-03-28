@@ -43,7 +43,7 @@
       </button>
     </div>
 
-    <!-- Checks -->
+    <!-- ServiceabilityChecks -->
     <div class="sidebar-section" id="checks-section">
       <div class="section-label">Serviceability Checks</div>
 
@@ -129,7 +129,7 @@
       <div class="info-row">
         <span class="info-label">Update Address List
           <span class="tooltip">ⓘ
-            <span class="tooltip-text">Adds an entry to list of addresses reporting this address as needing a change from the website.<br><span  style="color: green">Add</span> | Address does not appear on the website and should.<br><span  style="color: red">Remove</span> | Address appears on the website and should not.<br><br><span  style="color: #9b6dff">Reason</span> | The reason this address needs to be added or removed.</span>
+            <span class="tooltip-text">Adds an entry to a list of addresses that are "wrong on the the website" serviceability tool.<br><span  style="color: green">Add to Website</span> | Address does not appear on the website and should.<br><span  style="color: red">Remove from Website</span> | Address appears on the website and should not.<br><span  style="color: yellow">Other</span> | Other changes that needs to be made.<br><br><span  style="color: #9b6dff">Reason</span> | The reason this address needs to be added or removed.</span>
           </span>
         </span>
         <button id="copy-btn" onclick="openReportModal()">
@@ -162,8 +162,9 @@
     <div style="display:flex; flex-direction:column; gap:6px;">
       <label class="modal-action">Action</label>
       <select id="modal-action" class="modal-action-field">
-        <option value="Add">Add</option>
-        <option value="Remove">Remove</option>
+        <option value="Add">Add to Website</option>
+        <option value="Remove">Remove from Website</option>
+        <option value="Other">Other</option>
       </select>
     </div>
 

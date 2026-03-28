@@ -1,25 +1,28 @@
-const DEFAULT_ADDRESS = "61 Raddall Avenue, Dartmouth, NS, Canada";
-const DEFAULT_LAT  = 44.701519;
-const DEFAULT_LNG  = -63.586197;
+/*
+* Author: nandrychuk
+* Created: March 24 2026
+* Last Modified: March 28 2026
+* Description: Main JS for Purple Cow Serviceability Checker. Handles map display, address parsing, and serviceability logic.
+*/
 
-const WEIRD_SHEET_ID = "1pQmdCH4r2LDkOKAiBgFXL3diZzgOTY3PQgaPHp4WgMk";
-const WEIRD_CSV_URL  = `https://docs.google.com/spreadsheets/d/${WEIRD_SHEET_ID}/export?format=csv&gid=0`;
+// Spreadsheet URLs for data that needs to updated remotely without code changes
+const WEIRD_SCRIPT_ID = "AKfycbycOUxKm2oZXUrDsnFgYYwR3BumeR65Qrv0I4dbhfy27f_rJbJGql3j5I1s-spwJavO";
+const WEIRD_SCRIPT_URL  = `https://script.google.com/macros/s/${WEIRD_SCRIPT_ID}/exec`;
 
-const CITY_SHEET_ID = "1d3ww34fNYMcDfJE0hCoXMExc7yCeMwnvA4LI5bFQowI";
-const CITY_CSV_URL  = `https://docs.google.com/spreadsheets/d/${CITY_SHEET_ID}/export?format=csv&gid=0`;
+const UPDATE_SCRIPT_ID = 'AKfycbxx2t4BZ_LFYZp0PXpcMvsQgjnwl_VbbbCSO3vAymyJr8pUmPuAO0ca2ODztXjOdWHasw';
+const UPDATE_SCRIPT_URL = `https://script.google.com/macros/s/${UPDATE_SCRIPT_ID}/exec`;
 
-const APPS_SCRIPT_ID = 'AKfycbxx2t4BZ_LFYZp0PXpcMvsQgjnwl_VbbbCSO3vAymyJr8pUmPuAO0ca2ODztXjOdWHasw';
-const APPS_SCRIPT_URL = `https://script.google.com/macros/s/${APPS_SCRIPT_ID}/exec`;
-
-const PROVINCE_COLS = {
-  NS: { yes: 0, no: 1 },
-  PE: { yes: 2, no: 3 },
-  NL: { yes: 4, no: 5 },
-};
-
+// Serviceable provinces (all others are considered non-serviceable)
 const SERVICEABLE_PROVINCES = ["NS", "PE", "NL"];
 
-// Full name → abbreviation (all lowercase for comparison)
+// Serviceable and non-serviceable cities by province
+const CITY_DATA = {
+  NS:  { yes: ["halifax", "dartmouth", "bedford", "lower sackville", "cole harbour", "truro", "new glasgow", "antigonish"], no: ["glace bay", "new germany", "sherbrooke", "sheet harbour", "new ross", "inverness", "tatemagouche"] },
+  PEI: { yes: ["charlottetown", "stratford", "summerside", "cornwall", "harringston", "kensington", "brackley beach"], no: ["johnstons river", "lennox island", "nine mile creek", "tignish"]},
+  NL:  { yes: ["aspen cove", "piley's island", "red brook"], no: ["st. johns"] }
+};
+
+// Full suffix → abbreviation (all lowercase for comparison)
 const ROAD_ABBREVIATIONS = {
   "avenue": "ave", "boulevard": "blvd", "circle": "cir", "close": "cl",
   "court": "ct", "crescent": "cres", "drive": "dr", "expressway": "expy",
@@ -27,75 +30,60 @@ const ROAD_ABBREVIATIONS = {
   "heights": "hts", "highway": "hwy", "lane": "ln", "loop": "loop",
   "park": "pk", "parkway": "pkwy", "place": "pl", "plaza": "plaza",
   "road": "rd", "route": "rte", "run": "run", "square": "sq",
-  "street": "st", "terrace": "terr", "trail": "trl", "way": "way",
+  "street": "st", "terrace": "terr", "trail": "trl", "way": "way","hill": "hill"
 };
 
-// Reverse: abbreviation → full name
-const ROAD_ABBREV_TO_FULL = Object.fromEntries(
-  Object.entries(ROAD_ABBREVIATIONS).map(([full, abbr]) => [abbr, full])
-);
-
-// Direction full → abbreviation
+// Direction → abbreviation (all lowercase for comparison)
 const DIRECTION_ABBREVIATIONS = {
   "east": "e", "west": "w", "north": "n", "south": "s",
   "northeast": "ne", "northwest": "nw", "southeast": "se", "southwest": "sw",
 };
 
-// Direction abbreviation → full
-const DIRECTION_ABBREV_TO_FULL = Object.fromEntries(
-  Object.entries(DIRECTION_ABBREVIATIONS).map(([full, abbr]) => [abbr, full])
-);
 
-let map, marker, autocomplete;
-let blocklistData = [];
-let cityData      = [];
-let lastAddressParts = null;
-
-// ── Sheet loading ─────────────────────────────────────────────────────────────
-
-async function loadSheets() {
-  await Promise.all([loadBlocklist(), loadCitySheet()]);
-}
-
-async function loadBlocklist() {
-  try {
-    const res  = await fetch(WEIRD_CSV_URL);
-    if (!res.ok) throw new Error();
-    const text = await res.text();
-    const lines = text.trim().split("\n");
-    blocklistData = [];
-    for (let i = 1; i < lines.length; i++) {
-      const c = splitCSVLine(lines[i]);
-      if (c.length < 4) continue;
-      blocklistData.push({
-        streetNumber: norm(c[0]),
-        streetName:   norm(c[1]),
-        city:         norm(c[2]),
-        province:     (c[3] || "").trim().toUpperCase(),
-        reason:       (c[4] || "").trim(),
-      });
-    }
-  } catch { console.warn("Could not load blocklist sheet"); }
-}
-
-async function loadCitySheet() {
-  try {
-    const res  = await fetch(CITY_CSV_URL);
-    if (!res.ok) throw new Error();
-    const text = await res.text();
-    const lines = text.trim().split("\n");
-    cityData = [];
-    for (let i = 1; i < lines.length; i++) {
-      const c = splitCSVLine(lines[i]);
-      cityData.push(c.map(v => norm(v)));
-    }
-  } catch { console.warn("Could not load city sheet"); }
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
+// ── Helpers ────────────────────────────────────────────────────────────────────
+/**
+ * Normalizes a string by trimming whitespace and converting to lowercase
+ * @param s String to normalize
+ * @returns The normalized String
+ */
 function norm(s) { return (s || "").trim().toLowerCase(); }
 
+/**
+ * Capitalizes the first letter of a word
+ * @param word The word to capitalize
+ * @returns The capitalized word
+ */
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+// ── Sheet loading ─────────────────────────────────────────────────────────────
+let blocklistData = [];
+
+/**
+ * Loads the Weird addresses list into a block list to find known unserviceable addresses
+ * This sheet is maintained externally and can be updated without code changes
+ */
+async function loadBlocklist() {
+  try {
+    const res = await fetch(`${WEIRD_SCRIPT_URL}?action=blocklist`);
+    const text = await res.text();
+    const data = JSON.parse(text);
+    blocklistData = data.map(row => ({
+      streetNumber: norm(String(row["Street Number"] ?? "")),
+      streetName:   norm(row["Street Name"]),
+      city:         norm(row["City"]),
+      province:     (row["Province"] || "").trim().toUpperCase(),
+      reason:       (row["Reason"] || "").trim(),
+    }));
+  } catch (e) { console.warn("Could not load blocklist sheet", e);}
+}
+
+/**
+ * Splits a line of CSV data into fields, handling quoted fields with commas
+ * @param line a line of the CSV
+ * @returns resulting array of fields
+ */
 function splitCSVLine(line) {
   const result = [];
   let field = "", inQuotes = false;
@@ -108,30 +96,98 @@ function splitCSVLine(line) {
   return result;
 }
 
-function setBadge(id, status, text) {
-  const el = document.getElementById(id);
-  el.className = "badge " + status;
-  el.textContent = text;
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+let activeTooltip = null;
+
+/**
+ * Initializes tooltips by attaching mouseenter and mouseleave events to elements with the "tooltip" class
+ */
+function initTooltips() {
+  document.querySelectorAll(".tooltip").forEach(el => {
+    // Read the text content from the hidden .tooltip-text span, then remove it
+    const textEl = el.querySelector(".tooltip-text");
+    if (!textEl) return;
+    const html = textEl.innerHTML;
+    textEl.remove();
+
+    el.addEventListener("mouseenter", (e) => {
+      const popup = document.createElement("div");
+      popup.className = "tooltip-popup";
+      popup.innerHTML = html;
+      document.body.appendChild(popup);
+      activeTooltip = popup;
+
+      positionTooltip(popup, el);
+
+      requestAnimationFrame(() => popup.classList.add("visible"));
+    });
+
+    el.addEventListener("mouseleave", () => {
+      if (activeTooltip) {
+        activeTooltip.remove();
+        activeTooltip = null;
+      }
+    });
+  });
 }
 
-function capitalize(word) {
-  return word.charAt(0).toUpperCase() + word.slice(1);
+/**
+ * Positions the tooltip popup element above the anchor element, adjusting to keep it within the viewport
+ * @param popup 
+ * @param anchor 
+ */
+function positionTooltip(popup, anchor) {
+  const rect = anchor.getBoundingClientRect();
+  const popupRect = popup.getBoundingClientRect();
+
+  let top  = rect.top - popupRect.height - 8;
+  let left = rect.left + rect.width / 2 - popupRect.width / 2;
+
+  // Keep within viewport horizontally
+  if (left < 8) left = 8;
+  if (left + popupRect.width > window.innerWidth - 8) {
+    left = window.innerWidth - popupRect.width - 8;
+  }
+
+  // If it would go above the viewport, show below instead
+  if (top < 8) top = rect.bottom + 8;
+
+  popup.style.top  = `${top}px`;
+  popup.style.left = `${left}px`;
 }
 
-// Returns the distance in metres between two lat/lng points (Haversine formula)
-function haversineDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371000; // Earth radius in metres
-  const toRad = deg => deg * Math.PI / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat / 2) ** 2 +
-            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-            Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+// ── Address display ───────────────────────────────────────────────────────────
+let lastAddressParts = null;
+
+/**
+ * Updates the address display with the provided address
+ * @param components List of address components from Google Maps API geocoding result
+ */
+function updateAddressDisplay(components) {
+  const getComp = type => (components.find(c => c.types.includes(type)) || {});
+
+  const streetNumber = (getComp("street_number").long_name  || "").trim();
+  const streetName   = shortenStreetName(getComp("route").long_name || "");
+  const city         = (getComp("locality").long_name       || "").trim();
+  const province     = (getComp("administrative_area_level_1").short_name || "").trim();
+  const postalCode   = (getComp("postal_code").long_name    || "").trim();
+
+  lastAddressParts = { streetNumber, streetName, city, province, postalCode };
+
+  document.getElementById("addr-line1").textContent = `${streetNumber} ${streetName}`.trim();
+  document.getElementById("addr-line2").textContent = city;
+  document.getElementById("addr-line3").textContent = province;
+  document.getElementById("addr-line4").textContent = postalCode;
+
+  document.getElementById("address-display").style.display = "block";
 }
 
-// Converts a street name to display format with proper abbreviations.
-// "Main Street East" → "Main St E", "South Park Street" → "South Park St"
+/**
+ * Converts a street name to display format with proper abbreviations
+ * "Main Street" → "Main St", "Main Street East" → "Main St E", "South Park Street" → "South Park St"
+ * @param fullName Full street name from Google API
+ * @returns Shortened street name with abbreviations
+ */
 function shortenStreetName(fullName) {
   if (!fullName) return "";
   const words = fullName.trim().split(" ");
@@ -156,105 +212,11 @@ function shortenStreetName(fullName) {
   return words.join(" ");
 }
 
-// Expands all abbreviations in a street name to full words for comparison.
-function expandStreetName(name) {
-  if (!name) return "";
-  const words = name.trim().toLowerCase().split(" ");
-
-  const last = words[words.length - 1];
-  const lastExpanded = DIRECTION_ABBREV_TO_FULL[last] || null;
-  if (lastExpanded) {
-    words[words.length - 1] = lastExpanded;
-  }
-
-  const roadIdx = lastExpanded ? words.length - 2 : words.length - 1;
-  if (roadIdx >= 0) {
-    const roadWord = words[roadIdx];
-    if (ROAD_ABBREV_TO_FULL[roadWord]) {
-      words[roadIdx] = ROAD_ABBREV_TO_FULL[roadWord];
-    }
-  }
-
-  return words.join(" ");
-}
-
-// ── Tooltip ───────────────────────────────────────────────────────────────────
-
-let activeTooltip = null;
-
-function initTooltips() {
-  document.querySelectorAll(".tooltip").forEach(el => {
-    // Read the text content from the hidden .tooltip-text span, then remove it
-    const textEl = el.querySelector(".tooltip-text");
-    if (!textEl) return;
-    const html = textEl.innerHTML;
-    textEl.remove(); // no longer needed, we'll use JS instead
-
-    el.addEventListener("mouseenter", (e) => {
-      const popup = document.createElement("div");
-      popup.className = "tooltip-popup";
-      popup.innerHTML = html;
-      document.body.appendChild(popup);
-      activeTooltip = popup;
-
-      positionTooltip(popup, el);
-
-      // Trigger fade-in
-      requestAnimationFrame(() => popup.classList.add("visible"));
-    });
-
-    el.addEventListener("mouseleave", () => {
-      if (activeTooltip) {
-        activeTooltip.remove();
-        activeTooltip = null;
-      }
-    });
-  });
-}
-
-function positionTooltip(popup, anchor) {
-  const rect = anchor.getBoundingClientRect();
-  const popupRect = popup.getBoundingClientRect();
-
-  let top  = rect.top - popupRect.height - 8;
-  let left = rect.left + rect.width / 2 - popupRect.width / 2;
-
-  // Keep within viewport horizontally
-  if (left < 8) left = 8;
-  if (left + popupRect.width > window.innerWidth - 8) {
-    left = window.innerWidth - popupRect.width - 8;
-  }
-
-  // If it would go above the viewport, show below instead
-  if (top < 8) top = rect.bottom + 8;
-
-  popup.style.top  = `${top}px`;
-  popup.style.left = `${left}px`;
-}
-
-// ── Address display ───────────────────────────────────────────────────────────
-
-function updateAddressDisplay(components) {
-  const getComp = type => (components.find(c => c.types.includes(type)) || {});
-
-  const streetNumber = (getComp("street_number").long_name  || "").trim();
-  const streetName   = shortenStreetName(getComp("route").long_name || "");
-  const city         = (getComp("locality").long_name       || "").trim();
-  const province     = (getComp("administrative_area_level_1").short_name || "").trim();
-  const postalCode   = (getComp("postal_code").long_name    || "").trim();
-
-  lastAddressParts = { streetNumber, streetName, city, province, postalCode };
-
-  document.getElementById("addr-line1").textContent = `${streetNumber} ${streetName}`.trim();
-  document.getElementById("addr-line2").textContent = city;
-  document.getElementById("addr-line3").textContent = province;
-  document.getElementById("addr-line4").textContent = postalCode;
-
-  document.getElementById("address-display").style.display = "block";
-}
-
 // ── Copy Functions ────────────────────────────────────────────────────────────
 
+/**
+ * Copies full address to clipboard in a single line format (e.g. "123 Main St, Halifax, NS, A1A 1A1") and shows a temporary "Copied!" message on the button
+ */
 function copyAddress() {
   if (!lastAddressParts) return;
   const { streetNumber, streetName, city, province, postalCode } = lastAddressParts;
@@ -269,6 +231,9 @@ function copyAddress() {
   });
 }
 
+/**
+ * Copies just the street name to clipboard
+ */
 function copyStreetName() {
   if (!lastAddressParts) return;
   navigator.clipboard.writeText(lastAddressParts.streetName);
@@ -276,6 +241,9 @@ function copyStreetName() {
 
 // ── Report Modal ──────────────────────────────────────────────────────────────
 
+/**
+ * Opens the report modal and pre-fills it with the current address. Also performs a quick check to see if this address has already been reported and shows a warning if so
+ */
 async function openReportModal() {
   if (!lastAddressParts) {
     alert("Please search for an address first.");
@@ -284,7 +252,7 @@ async function openReportModal() {
 
   const { streetNumber, streetName, city, province } = lastAddressParts;
 
-  // 👉 Open modal immediately in loading state
+  // Open modal immediately in loading state
   document.getElementById("modal-address-label").textContent =
     `${streetNumber} ${streetName}, ${city}, ${province}`;
   
@@ -304,7 +272,7 @@ async function openReportModal() {
   document.getElementById("modal-overlay").style.display = "flex";
 
   // async check in background
-  const checkUrl = `${APPS_SCRIPT_URL}?action=check&streetNumber=${encodeURIComponent(streetNumber)}&streetName=${encodeURIComponent(streetName)}`;
+  const checkUrl = `${UPDATE_SCRIPT_URL}?action=check&streetNumber=${encodeURIComponent(streetNumber)}&streetName=${encodeURIComponent(streetName)}`;
 
   try {
     const res = await fetch(checkUrl);
@@ -331,10 +299,16 @@ async function openReportModal() {
   document.getElementById("modal-reason").disabled = false;
 }
 
+/**
+ * Closes the report modal when cancel is pressed
+ */
 function closeReportModal() {
   document.getElementById("modal-overlay").style.display = "none";
 }
 
+/**
+ * Submits the report to the app script, which will add it to the spreadsheet. Also handles UI state changes for loading and error/success feedback
+ */
 async function submitReport() {
   if (!lastAddressParts) return;
 
@@ -342,10 +316,8 @@ async function submitReport() {
   const spinner   = document.getElementById("submit-spinner");
   const text      = document.getElementById("submit-text");
 
-  // 🚫 Prevent double clicks
+  // Prevent double clicks
   if (submitBtn.disabled) return;
-
-  // 👉 Lock UI + show spinner
   submitBtn.disabled = true;
   spinner.style.display = "inline-block";
   text.textContent = "Submitting...";
@@ -353,8 +325,6 @@ async function submitReport() {
   // Disable all modal inputs
   document.getElementById("modal-action").disabled = true;
   document.getElementById("modal-reason").disabled = true;
-
-  // Optional: block closing modal by clicking background
   document.getElementById("modal-overlay").style.pointerEvents = "none";
 
   const { streetNumber, streetName, city, province } = lastAddressParts;
@@ -362,7 +332,7 @@ async function submitReport() {
   const reason  = document.getElementById("modal-reason").value.trim();
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
+    await fetch(UPDATE_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain" },
@@ -383,7 +353,7 @@ async function submitReport() {
   } catch {
     alert("Submission failed. Check your connection.");
   } finally {
-    // 🔄 Reset UI (in case modal is reused quickly)
+    // Reset modal UI state regardless of success or failure
     submitBtn.disabled = false;
     spinner.style.display = "none";
     text.textContent = "Submit";
@@ -396,12 +366,24 @@ async function submitReport() {
 
 // ── Serviceability checks ─────────────────────────────────────────────────────
 
+/**
+ * Checks that the province is serviceable
+ * @param province The province code (e.g. "NS") to check
+ * @returns The serviceability status and label
+ */
 function provinceCheck(province) {
   if (!province) return { status: "yellow", label: "Unknown" };
   if (SERVICEABLE_PROVINCES.includes(province)) return { status: "green", label: "Serviceable" };
   return { status: "red", label: "Not Serviceable" };
 }
 
+/**
+ * Checks if a location is within a service circle
+ * @param lat Latitude of the location
+ * @param lng Longitude of the location
+ * @param provStatus Status of the province
+ * @returns The serviceability status and label
+ */
 function serviceCircleCheck(lat, lng, provStatus) {
   if (provStatus === "red") return { status: "red", label: "Parent Not Serviceable" };
   if (lat == null || lng == null) return { status: "yellow", label: "Unknown Serviceability" };
@@ -415,27 +397,61 @@ function serviceCircleCheck(lat, lng, provStatus) {
     : { status: "yellow", label: "Unknown Serviceability" };
 }
 
+/**
+ * Returns the distance in metres between two lat/lng points (Haversine formula)
+ * @param lat1 Latitude of address point
+ * @param lng1 Longitude of address point
+ * @param lat2 Latitude of circle center
+ * @param lng2 Longitude of circle center
+ * @returns Distance in metres
+ */
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000; // Earth radius in metres
+  const toRad = deg => deg * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/**
+ * Checks if a city is serviceable
+ * @param city The city name to check
+ * @param province The province code to check
+ * @param circleStatus Status of the service circle
+ * @returns The serviceability status and label
+ */
 function cityCheck(city, province, circleStatus) {
   if (circleStatus === "red") return { status: "red", label: "Parent Not Serviceable" };
   
-  if (!city || !province || !PROVINCE_COLS[province]) {
+  if (!city || !province) {
     return { status: "yellow", label: "Unknown Serviceability" };
   }
-  const cols = PROVINCE_COLS[province];
-  if (cityData.some(row => row[cols.yes] === city)) return { status: "green", label: "Serviceable" };
-  if (cityData.some(row => row[cols.no]  === city)) return { status: "red",   label: "Not Serviceable" };
+
+  let provinceKey = CITY_DATA[province];
+
+  if (provinceKey.yes.includes(city)) return { status: "green", label: "Serviceable" };
+  if (provinceKey.yes.includes(city)) return { status: "red",   label: "Not Serviceable" };
   return { status: "yellow", label: "Unknown Serviceability" };
 }
 
+/**
+ * Checks the weird buildings blocklist to see if this address is a known unserviceable building
+ * @param streetNumber
+ * @param streetName 
+ * @param city 
+ * @param province 
+ * @param cityStatus 
+ * @returns The serviceability status and label
+ */
 function weirdBuildingsCheck(streetNumber, streetName, city, province, cityStatus) {
   if (cityStatus === "red") return { status: "red", label: "Parent Not Serviceable", reason: "" };
 
-  const expandedSearch = expandStreetName(streetName);
-
   const match = blocklistData.find(row => {
-    const expandedRow = expandStreetName(row.streetName);
     const numMatch  = !row.streetNumber || row.streetNumber === streetNumber;
-    const nameMatch = expandedSearch.includes(expandedRow) || expandedRow.includes(expandedSearch);
+    const nameMatch = streetName.includes(row.streetName) || row.streetName.includes(streetName);
     const cityMatch = !row.city || row.city === city;
     const provMatch = !row.province || row.province === province;
     return numMatch && nameMatch && cityMatch && provMatch;
@@ -445,8 +461,26 @@ function weirdBuildingsCheck(streetNumber, streetName, city, province, cityStatu
   return { status: "green", label: "Serviceable", reason: "" };
 }
 
+/**
+ * Sets the badge for each check's 
+ * @param id HTML element ID of the badge to update
+ * @param status Colour status of the badge ("green", "yellow", "red")
+ * @param text Text content for the badge
+ */
+function setBadge(id, status, text) {
+  const el = document.getElementById(id);
+  el.className = "badge " + status;
+  el.textContent = text;
+}
+
 // ── Run all checks ────────────────────────────────────────────────────────────
 
+/**
+ * Runs all serviceability checks for the given address
+ * @param addressComponents Address components from Google Maps API geocoding result
+ * @param lat Latitude of the address
+ * @param lng Longitude of the address
+ */
 function runChecks(addressComponents, lat, lng) {
   document.getElementById("checks-section").style.display = "block";
   document.getElementById("sheets-section").style.display = "block";
@@ -503,6 +537,9 @@ const COVERAGE_CIRCLES = [
   {lat: 49.2547031, lng: -55.0696864, radius: 5281.758940530723},{lat: 49.5176514, lng: -55.7190393, radius: 4735.603995366502},{lat: 48.3851988, lng: -58.5913337, radius: 6537.390403810688},{lat: 48.6211178, lng: -58.4949808, radius: 7728.745906289985},{lat: 48.5346561, lng: -59.1268124, radius: 6787.859980987226}
 ];
 
+/**
+ * Draws the coverage circles on the Google Map based on the predefined COVERAGE_CIRCLES
+ */
 function drawCoverageCircles() {
   COVERAGE_CIRCLES.forEach(({ lat, lng, radius }) => {
     new google.maps.Circle({
@@ -519,11 +556,14 @@ function drawCoverageCircles() {
 }
 
 // ── Google Maps ───────────────────────────────────────────────────────────────
+let map, marker, autocomplete;
+
 
 function initMap() {
-  loadSheets();
+  loadBlocklist();
 
-  const defaultPos = { lat: DEFAULT_LAT, lng: DEFAULT_LNG };
+  //Defaults to our warehouse at 61 Raddall Avenue, Dartmouth
+  const defaultPos = { lat: 44.701519, lng: -63.586197 };
 
   map = new google.maps.Map(document.getElementById("map"), {
     center: defaultPos,
