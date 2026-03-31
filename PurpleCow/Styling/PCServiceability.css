@@ -61,7 +61,8 @@ header h1 span { color: var(--purple); }
   align-items: center;
   gap: 0.5vw;
 }
-.slack-link {
+.slack-link,
+.slac-link:visited {
   font-size: 0.75rem;
   font-weight: 500;
   color: #b48aff;
