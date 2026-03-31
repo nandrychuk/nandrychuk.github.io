@@ -42,6 +42,33 @@ header h1 {
 
 header h1 span { color: var(--purple); }
 
+.credit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-left: 2%;
+  margin-right: auto;
+  text-align: left;
+}
+
+.credit {
+  font-size: 0.9rem;
+  color: #8c899e;
+}
+
+.slack-link-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vw;
+}
+.slack-link {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #b48aff;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
 /* ── Layout ── */
 .layout {
   display: grid;
@@ -214,7 +241,8 @@ header h1 span { color: var(--purple); }
   transition: color 0.15s;
 }
 
-.info-link:hover { color: var(--purple); text-decoration: underline; }
+.info-link, 
+.slack-link:hover { color: var(--purple); text-decoration: underline; }
 
 /* ── Autocomplete dropdown ── */
 .pac-container {
