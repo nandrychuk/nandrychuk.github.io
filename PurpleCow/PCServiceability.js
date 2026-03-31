@@ -18,7 +18,7 @@ const SERVICEABLE_PROVINCES = ["NS", "PE", "NL"];
 // Serviceable and non-serviceable cities by province
 const CITY_DATA = {
   NS:  { yes: ["halifax", "dartmouth", "bedford", "lower sackville", "cole harbour", "truro", "new glasgow", "antigonish"], no: ["glace bay", "new germany", "sherbrooke", "sheet harbour", "new ross", "inverness", "tatemagouche"] },
-  PEI: { yes: ["charlottetown", "stratford", "summerside", "cornwall", "harringston", "kensington", "brackley beach"], no: ["johnstons river", "lennox island", "nine mile creek", "tignish"]},
+  PE: { yes: ["charlottetown", "stratford", "summerside", "cornwall", "harringston", "kensington", "brackley beach"], no: ["johnstons river", "lennox island", "nine mile creek", "tignish"]},
   NL:  { yes: ["aspen cove", "piley's island", "red brook"], no: ["st. johns"] }
 };
 
@@ -433,7 +433,7 @@ function cityCheck(city, province, circleStatus) {
   let provinceKey = CITY_DATA[province];
 
   if (provinceKey.yes.includes(city)) return { status: "green", label: "Serviceable" };
-  if (provinceKey.yes.includes(city)) return { status: "red",   label: "Not Serviceable" };
+  if (provinceKey.no.includes(city)) return { status: "red",   label: "Not Serviceable" };
   return { status: "yellow", label: "Unknown Serviceability" };
 }
 
